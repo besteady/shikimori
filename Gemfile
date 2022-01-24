@@ -6,8 +6,8 @@ git_source(:github) do |repo_name|
 end
 
 gem 'rails', '5.2.6'
-gem 'bootsnap', require: false
-
+gem 'bootsnap', github: 'Shopify/bootsnap', branch: 'master', require: false
+gem 'tzinfo-data'
 # database & cache
 gem 'dalli'
 gem 'pg'
@@ -159,7 +159,7 @@ group :development do
   gem 'capistrano-rails', require: false
   gem 'capistrano-rbenv', require: false
 
-  gem 'active_record_query_trace'
+  gem 'active_record_query_trace', github: 'brunofacca/active-record-query-trace', branch: :master
   # gem 'foreman'
 end
 

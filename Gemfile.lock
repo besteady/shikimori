@@ -1,4 +1,19 @@
 GIT
+  remote: https://github.com/Shopify/bootsnap.git
+  revision: a0aa3d2b0cbdcef9d8db9ae787c3628ac250780f
+  branch: master
+  specs:
+    bootsnap (1.9.3)
+      msgpack (~> 1.0)
+
+GIT
+  remote: https://github.com/brunofacca/active-record-query-trace.git
+  revision: c07573a3a44e34124d5f99d68b287ea074470471
+  branch: master
+  specs:
+    active_record_query_trace (1.8)
+
+GIT
   remote: https://github.com/flori/amatch.git
   revision: 351285f667573340ed14e976e2b0984daca4b0e4
   specs:
@@ -117,7 +132,6 @@ GEM
       activemodel (>= 4.1, < 6)
       case_transform (>= 0.2)
       jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
-    active_record_query_trace (1.6.2)
     activejob (5.2.6)
       activesupport (= 5.2.6)
       globalid (>= 0.3.6)
@@ -164,8 +178,6 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
-    bootsnap (1.9.3)
-      msgpack (~> 1.0)
     brakeman (5.2.0)
     browser (5.3.1)
     bugsnag (6.24.1)
@@ -720,6 +732,8 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
+    tzinfo-data (1.2021.5)
+      tzinfo (>= 1.0.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
@@ -756,7 +770,7 @@ PLATFORMS
 DEPENDENCIES
   actionpack-action_caching
   active_model_serializers
-  active_record_query_trace
+  active_record_query_trace!
   activerecord-import
   acts_as_list
   acts_as_votable
@@ -768,7 +782,7 @@ DEPENDENCIES
   awesome_print
   better_errors
   binding_of_caller
-  bootsnap
+  bootsnap!
   browser
   bugsnag
   bullet
@@ -893,6 +907,7 @@ DEPENDENCIES
   translit
   truncate_html
   turbolinks
+  tzinfo-data
   uglifier
   unicode
   unicorn

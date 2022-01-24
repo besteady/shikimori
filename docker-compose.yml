@@ -1,0 +1,105 @@
+version: "3.8"
+
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: host
+
+  server:
+    container_name: server
+    image: shiki-deps
+    build:
+      context: .
+      dockerfile: Docker/web/Dockerfile
+    environment:
+      - PGHOST=localhost
+    depends_on:
+      - postgres
+      - redis
+    command: ./Docker/web/run.sh
+    volumes:
+      - workspace:/home/shiki
+    network_mode: host
+
+  webpack:
+    container_name: webpack
+    image: shiki-deps
+    volumes:
+      - workspace:/home/shiki
+    depends_on:
+      - server
+    command: >
+      bash -c "set -ex; rake i18n:js:export; ./bin/webpack-dev-server"
+    network_mode: host
+
+  sidekiq:
+    container_name: sidekiq
+    image: shiki-deps
+    volumes:
+      - workspace:/home/shiki
+    depends_on:
+      - server
+    command: ./Docker/sidekiq/run.sh
+    network_mode: host
+
+  neko-achievements:
+    container_name: neko-achievements
+    image: neko-achievements-deps
+    build:
+      context: Docker/neko-achievements
+    depends_on:
+      - server
+    command: >
+      bash -c "set -ex; SHIKIMORI_LOCAL=true mix run --no-halt"
+    network_mode: host
+
+  camo:
+    container_name: camo
+    image: camo-deps
+    build:
+      context: Docker/camo
+    # depends_on:
+    #   - server
+    environment:
+      - AMO_KEY=abc
+      - PORT=5566
+      - CAMO_ENDPOINT_PATH=/
+      - CAMO_SOCKET_TIMEOUT=90
+      - CAMO_LENGTH_LIMIT=20971520
+      - CAMO_LENGTH_LIMIT_REDIRECT=1
+      - CAMO_403_REDIRECT=1
+      - CAMO_LOGGING_ENABLED=debug
+      - CAMO_ALLOWED_HOSTS=safebooru.org,cdn.donmai.us,raikou1.donmai.us,raikou2.donmai.us,raikou3.donmai.us,raikou4.donmai.us,raikou5.donmai.us,danbooru.donmai.us,hijiribe.donmai.us,sonohara.donmai.us,yande.re,files.yande.re,assets.yande.re,konachan.com
+    command: >
+      bash -c "set -ex; node server.js"
+
+  faye:
+    container_name: faye
+    image: faye-deps
+    build:
+      context: Docker/faye
+    depends_on:
+      - server
+    environment:
+      - NODE_ENV=development
+      - FAYE_PORT=9292
+      - FAYE_KEY=xxxxxxxxxxxxxxxxxxxx
+      - FAYE_ENDPOINT_PATH=/
+    command: >
+      bash -c "set -ex; node server.js"
+
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    network_mode: host
+
+  postgres:
+    container_name: postgres
+    image: "postgres:10.5-alpine"
+    network_mode: host
+
+volumes:
+  workspace: null
